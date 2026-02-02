@@ -101,12 +101,9 @@ The platform implements a batch-first enterprise data lake architecture with cle
 
 ---
 
-## Repository Structure
 
 ## Repository Structure
-
-Repository Structure
-
+```md
 aws-enterprise-data-foundation/
 ├── airflow/
 │   └── dags/
@@ -128,7 +125,7 @@ aws-enterprise-data-foundation/
 ├── .gitignore
 ├── LICENSE
 └── README.md
-
+```md
 
 
 ---
