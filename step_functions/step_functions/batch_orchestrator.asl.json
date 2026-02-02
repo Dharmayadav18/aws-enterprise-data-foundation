@@ -1,0 +1,96 @@
+{
+  "Comment": "AWS Enterprise Data Foundation - Batch Orchestrator (Glue -> Validation -> Publish Gate)",
+  "StartAt": "RunGlueTransform",
+  "States": {
+    "RunGlueTransform": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::glue:startJobRun.sync",
+      "Parameters": {
+        "JobName.$": "$.glue_job_name",
+        "Arguments": {
+          "--run_date.$": "$.run_date",
+          "--raw_s3_path.$": "$.raw_s3_path",
+          "--curated_s3_path.$": "$.curated_s3_path"
+        }
+      },
+      "Retry": [
+        {
+          "ErrorEquals": ["States.TaskFailed", "Glue.ConcurrentRunsExceededException"],
+          "IntervalSeconds": 30,
+          "MaxAttempts": 2,
+          "BackoffRate": 2.0
+        }
+      ],
+      "Catch": [
+        {
+          "ErrorEquals": ["States.ALL"],
+          "Next": "NotifyFailure"
+        }
+      ],
+      "Next": "RunAthenaValidation"
+    },
+
+    "RunAthenaValidation": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::athena:startQueryExecution.sync",
+      "Parameters": {
+        "QueryString.$": "$.validation_sql",
+        "QueryExecutionContext": {
+          "Database.$": "$.athena_database"
+        },
+        "ResultConfiguration": {
+          "OutputLocation.$": "$.athena_output_s3"
+        }
+      },
+      "Catch": [
+        {
+          "ErrorEquals": ["States.ALL"],
+          "Next": "NotifyFailure"
+        }
+      ],
+      "Next": "ValidationGate"
+    },
+
+    "ValidationGate": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.validation_passed",
+          "BooleanEquals": true,
+          "Next": "PublishGate"
+        }
+      ],
+      "Default": "NotifyFailure"
+    },
+
+    "PublishGate": {
+      "Type": "Pass",
+      "Result": {
+        "message": "Validation passed. Ready to publish curated data to Snowflake/Redshift layer."
+      },
+      "Next": "NotifySuccess"
+    },
+
+    "NotifySuccess": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::sns:publish",
+      "Parameters": {
+        "TopicArn.$": "$.sns_topic_arn",
+        "Message.$": "$.success_message",
+        "Subject": "Batch Pipeline SUCCESS"
+      },
+      "End": true
+    },
+
+    "NotifyFailure": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::sns:publish",
+      "Parameters": {
+        "TopicArn.$": "$.sns_topic_arn",
+        "Message.$": "$.failure_message",
+        "Subject": "Batch Pipeline FAILED"
+      },
+      "End": true
+    }
+  }
+}
