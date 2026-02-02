@@ -1,0 +1,34 @@
+{
+  "Comment": "AWS Enterprise Data Foundation - Batch Workflow (Skeleton) | Author: Dharmendra",
+  "StartAt": "Start",
+  "States": {
+    "Start": {
+      "Type": "Pass",
+      "Next": "TriggerTransformJob"
+    },
+    "TriggerTransformJob": {
+      "Type": "Pass",
+      "Result": {
+        "message": "Placeholder for Glue/EMR/Databricks job trigger"
+      },
+      "Next": "RunValidationChecks"
+    },
+    "RunValidationChecks": {
+      "Type": "Pass",
+      "Result": {
+        "message": "Placeholder for Athena/SQL validation gate"
+      },
+      "Next": "PublishCuratedData"
+    },
+    "PublishCuratedData": {
+      "Type": "Pass",
+      "Result": {
+        "message": "Placeholder for publishing curated data to analytics layer"
+      },
+      "Next": "Success"
+    },
+    "Success": {
+      "Type": "Succeed"
+    }
+  }
+}
