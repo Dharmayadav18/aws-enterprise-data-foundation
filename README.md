@@ -103,27 +103,26 @@ The platform implements a batch-first enterprise data lake architecture with cle
 
 ## Repository Structure
 
+## Repository Structure
+
 aws-enterprise-data-foundation/
-├─ airflow/
-│  └─ dags/
-│     └─ batch_pipeline_dag.py
-├─ glue_jobs/
-│  ├─ ingestion/
-│  ├─ transformations/
-│  └─ glue_jobs/
-│     ├─ transform_incremental_batch.py
-│     └─ validate_batch_outputs.py
-├─ sql/
-│  └─ sql/
-│     └─ validate_batch_counts.sql
-├─ step_functions/
-│  └─ state_machine.json (or your state machine file)
-├─ terraform/
-│  ├─ main.tf
-│  ├─ variables.tf
-│  ├─ outputs.tf
-│  └─ README.md
-└─ README.md
+├── airflow/
+│   └── dags/
+│       └── batch_pipeline_dag.py
+├── glue_jobs/
+│   ├── transform_incremental_batch.py
+│   └── validate_batch_outputs.py
+├── sql/
+│   ├── validate_batch_counts.sql
+│   └── README.md
+├── step_functions/
+│   └── state_machine.json
+├── terraform/
+│   ├── main.tf
+│   ├── variables.tf
+│   ├── outputs.tf
+│   └── README.md
+└── README.md
 
 
 ---
@@ -147,5 +146,7 @@ Senior Data Engineer | Big Data | Cloud (AWS & Azure)
 6. Apache Airflow schedules and orchestrates daily batch execution.
 7. Terraform defines infrastructure and security boundaries.
 
-This repository is a production-style skeleton designed to demonstrate
-enterprise batch data engineering practices, not a runnable demo.
+This repository represents a production-style enterprise batch data platform.
+It is intentionally designed as a structural and architectural reference rather
+than a runnable demo.
+
