@@ -1,0 +1,36 @@
+{
+  "Comment": "AWS Enterprise Data Foundation - Batch Workflow (Skeleton) | Author: Dharmendra",
+  "StartAt": "RunGlueTransform",
+  "States": {
+    "RunGlueTransform": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::glue:startJobRun.sync",
+      "Parameters": {
+        "JobName": "aws_edf_glue_transform",
+        "Arguments": {
+          "--run_date.$": "$.run_date"
+        }
+      },
+      "Next": "ValidateWithAthena"
+    },
+    "ValidateWithAthena": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::athena:startQueryExecution.sync",
+      "Parameters": {
+        "QueryString.$": "$.validation_query",
+        "WorkGroup": "primary"
+      },
+      "Next": "PublishSuccess"
+    },
+    "PublishSuccess": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::sns:publish",
+      "Parameters": {
+        "TopicArn": "arn:aws:sns:us-east-1:123456789012:batch-alerts",
+        "Message.$": "States.Format('Batch completed successfully for run_date={}', $.run_date)",
+        "Subject": "Batch Success"
+      },
+      "End": true
+    }
+  }
+}
