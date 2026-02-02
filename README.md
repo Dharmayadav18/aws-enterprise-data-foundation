@@ -103,6 +103,29 @@ The platform implements a batch-first enterprise data lake architecture with cle
 
 ## Repository Structure
 
+aws-enterprise-data-foundation/
+├─ airflow/
+│  └─ dags/
+│     └─ batch_pipeline_dag.py
+├─ glue_jobs/
+│  ├─ ingestion/
+│  ├─ transformations/
+│  └─ glue_jobs/
+│     ├─ transform_incremental_batch.py
+│     └─ validate_batch_outputs.py
+├─ sql/
+│  └─ sql/
+│     └─ validate_batch_counts.sql
+├─ step_functions/
+│  └─ state_machine.json (or your state machine file)
+├─ terraform/
+│  ├─ main.tf
+│  ├─ variables.tf
+│  ├─ outputs.tf
+│  └─ README.md
+└─ README.md
+
+
 ---
 
 ## Purpose
@@ -114,3 +137,15 @@ It mirrors real-world production patterns rather than academic or demo-style imp
 ## Author
 Dharmendra 
 Senior Data Engineer | Big Data | Cloud (AWS & Azure)
+## How This Project Is Used (Enterprise Pattern)
+
+1. Batch data arrives in Amazon S3 (raw layer).
+2. AWS Glue runs incremental Spark transformations.
+3. Data is written in partitioned Parquet format.
+4. Athena SQL checks validate record counts and data quality.
+5. AWS Step Functions enforces validation gates and publish control.
+6. Apache Airflow schedules and orchestrates daily batch execution.
+7. Terraform defines infrastructure and security boundaries.
+
+This repository is a production-style skeleton designed to demonstrate
+enterprise batch data engineering practices, not a runnable demo.
