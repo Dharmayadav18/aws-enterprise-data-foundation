@@ -105,16 +105,19 @@ The platform implements a batch-first enterprise data lake architecture with cle
 
 ## Repository Structure
 
+Repository Structure
+
 aws-enterprise-data-foundation/
 ├── airflow/
 │   └── dags/
 │       └── batch_pipeline_dag.py
 ├── glue_jobs/
-│   ├── transform_incremental_batch.py
+│   ├── ingestion/
+│   ├── transformations/
+│   │   └── transform_incremental_batch.py
 │   └── validate_batch_outputs.py
 ├── sql/
-│   ├── validate_batch_counts.sql
-│   └── README.md
+│   └── validate_batch_counts.sql
 ├── step_functions/
 │   └── state_machine.json
 ├── terraform/
@@ -122,7 +125,10 @@ aws-enterprise-data-foundation/
 │   ├── variables.tf
 │   ├── outputs.tf
 │   └── README.md
+├── .gitignore
+├── LICENSE
 └── README.md
+
 
 
 ---
