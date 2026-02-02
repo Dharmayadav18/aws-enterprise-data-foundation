@@ -125,7 +125,7 @@ aws-enterprise-data-foundation/
 ├── .gitignore
 ├── LICENSE
 └── README.md
-```md
+```
 
 
 ---
